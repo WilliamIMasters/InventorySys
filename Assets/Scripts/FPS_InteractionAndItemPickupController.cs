@@ -28,8 +28,12 @@ public class FPS_InteractionAndItemPickupController : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab)) {
-            if (invUI != null)
+            if (invUI != null) {
                 invUI.enabled = !invUI.enabled;
+                Cursor.visible = invUI.enabled;
+                Cursor.lockState = invUI.enabled ? CursorLockMode.None : CursorLockMode.Locked;
+            }
+            
         }
     }
 

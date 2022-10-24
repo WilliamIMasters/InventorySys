@@ -42,3 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: UIBackground
+    uniqueID: 3185209567
+    locked: 0
+  - name: UIMid
+    uniqueID: 4015868843
+    locked: 0
+  - name: UITop
+    uniqueID: 3392435969
+    locked: 0

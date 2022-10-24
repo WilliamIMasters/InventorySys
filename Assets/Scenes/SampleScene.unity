@@ -464,7 +464,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1524,6 +1524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 6385208567704464099, guid: bc37dcd22a0f1a542a22f078149b470e, type: 3}
+  emptySlotPrefab: {fileID: 6385208567704464099, guid: 8e5b76d6e50ea3048923cc29ee6b1419, type: 3}
   container: {fileID: 414776758}
   inventorySlots: []
 --- !u!1001 &2015456170
@@ -1672,7 +1673,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 963194227}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1

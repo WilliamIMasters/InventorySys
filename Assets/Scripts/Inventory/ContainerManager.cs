@@ -5,10 +5,11 @@ using UnityEngine;
 public class ContainerManager : MonoBehaviour
 {
     public GameObject slotPrefab;
+    public GameObject emptySlotPrefab;
 
     public Container container;
 
-    public List<InventorySlot> inventorySlots = new List<InventorySlot>();
+    public List<ItemSlotManager> inventorySlots = new List<ItemSlotManager>();
 
 
     private void Update()
@@ -26,7 +27,7 @@ public class ContainerManager : MonoBehaviour
 
     public void ClearContainerUI()
     {
-        inventorySlots = new List<InventorySlot>();
+        inventorySlots = new List<ItemSlotManager>();
         foreach (Transform  child in transform) {
             Destroy(child.gameObject);
         }
@@ -39,17 +40,20 @@ public class ContainerManager : MonoBehaviour
         for(int i=0; i < container.maxCapacity; i++) {
             CreateEmptyInventorySlot();
             Item itemAtIndex = container.GetItemAtIndex(i);
-            if (itemAtIndex != null)
-                inventorySlots[i].DrawSlot(itemAtIndex);
+            if (itemAtIndex != null) {
+                inventorySlots[i].AddItemSlot(itemAtIndex);
+                //inventorySlots[i].slot?.DrawSlot(itemAtIndex);
+
+            }
         }
     }
 
     private void CreateEmptyInventorySlot()
     {
-        GameObject newSlot = Instantiate(slotPrefab);
+        GameObject newSlot = Instantiate(emptySlotPrefab);
         newSlot.transform.SetParent(transform, false);
 
-        InventorySlot newSlotComponent = newSlot.GetComponent<InventorySlot>();
+        ItemSlotManager newSlotComponent = newSlot.GetComponent<ItemSlotManager>();
         newSlotComponent.ClearSlot();
 
         inventorySlots.Add(newSlotComponent);

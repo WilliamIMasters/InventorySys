@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System;
 
-public class InventorySlot : MonoBehaviour
+public class ItemSlot : MonoBehaviour
 {
 
+    public Item item;
+
+    //public Image icon;
     public Image icon;
     public TMP_Text qty;
     public Image qtyBG;
@@ -18,6 +23,7 @@ public class InventorySlot : MonoBehaviour
         icon.enabled = false;
         qty.enabled = false;
         qtyBG.enabled = false;
+        item = null;
     }
 
     public void  DrawSlot(Item item)
@@ -27,11 +33,16 @@ public class InventorySlot : MonoBehaviour
             return;
         }
 
+
+        this.item = item;
+
         EnableSlot();
         icon.sprite = item.icon;
         qty.text = item is StackableItem ? ((StackableItem)item).qty.ToString() : "";
         qtyBG.enabled = qty.text == "" ? false : true;
     }
+
+    
     private void EnableSlot()
     {
         icon.enabled = true;
