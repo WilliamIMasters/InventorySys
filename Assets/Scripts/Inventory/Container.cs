@@ -1,13 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Container : MonoBehaviour
 {
+    public UnityEvent ContainerChanged;
+
 
     [SerializeField]
-    private List<Item> container;
+    private List<Item> items;
     public int maxCapacity;
 
     public Container(int maxCapacity)
@@ -16,46 +20,44 @@ public class Container : MonoBehaviour
     }
     public Container(List<Item> items, int maxCapacity)
     {
-        this.container = items;
+        this.items = items;
         this.maxCapacity = maxCapacity;
     }
 
     private void Start()
     {
-        container = new List<Item>();
-        container.Add(new Consumable("Apple", "An apple", 0, 15, 16, new ConsumableEffect[0]));
-
+        items ??= new List<Item>();
         if (maxCapacity == 0) maxCapacity = 16;
     }
 
     public void AddItem(Item item)
     {
-        if (container == null) container = new List<Item>();
+        if (items == null) items = new List<Item>();
 
 
         if(item is StackableItem) {
 
             var itemS = (StackableItem)item;
 
-            var existingItemIndex = container.FindIndex(i => i.id == item.id && ((StackableItem)i).qty < ((StackableItem)i).maxStack);
+            var existingItemIndex = items.FindIndex(i => i.id == item.id && ((StackableItem)i).qty < ((StackableItem)i).maxStack);
 
             if(existingItemIndex != -1) { // if existing item is found 
 
                 int newItemQty = itemS.qty;
-                int existingItemQty = ((StackableItem)container[existingItemIndex]).qty;
-                int maxStack = ((StackableItem)container[existingItemIndex]).maxStack;
+                int existingItemQty = ((StackableItem)items[existingItemIndex]).qty;
+                int maxStack = ((StackableItem)items[existingItemIndex]).maxStack;
 
                 int overflow = (newItemQty + existingItemQty) - maxStack;
 
                 if(overflow > 0) {
-                    ((StackableItem)container[existingItemIndex]).qty = maxStack;
+                    ((StackableItem)items[existingItemIndex]).qty = maxStack;
 
                     var newItem = itemS;
                     newItem.qty = overflow;
                     AddItem(newItem);
 
                 } else {
-                    ((StackableItem)container[existingItemIndex]).qty += itemS.qty;
+                    ((StackableItem)items[existingItemIndex]).qty += itemS.qty;
                 }
 
             } else {
@@ -69,12 +71,26 @@ public class Container : MonoBehaviour
         }
 
         // Update UI;
+        ContainerChanged.Invoke();
     }
+
+    public void ClearItems()
+    {
+        items = new List<Item>();
+        ContainerChanged.Invoke();
+    }
+
+    public Item GetItemAtIndex(int i)
+    {
+        if (i >= items.Count) return null;
+        return items[i];
+    }
+
 
     private void AddNewItem(Item item)
     {
-        if(container.Count < maxCapacity) {
-            container.Add(item);
+        if(items.Count < maxCapacity) {
+            items.Add(item);
         }
     }
 
