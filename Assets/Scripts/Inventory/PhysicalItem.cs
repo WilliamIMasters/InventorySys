@@ -6,11 +6,19 @@ public class PhysicalItem : MonoBehaviour
 {
 
     [SerializeField]
+    private Item itemScriptable;
+    [SerializeField]
+    private int qty;
+
     private Item item;
-    [SerializeField]
-    public int? id = null;
-    [SerializeField]
-    public int? qty = null;
+
+    private void Awake()
+    {
+        item = Instantiate(itemScriptable);
+        if(item is StackableItem) {
+            ((StackableItem)item).qty = this.qty;
+        }
+    }
 
     public Item GetItem()
     {

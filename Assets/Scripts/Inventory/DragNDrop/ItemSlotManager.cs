@@ -9,6 +9,8 @@ public class ItemSlotManager : MonoBehaviour
 
     public ItemSlot slot;
 
+    public int index;
+
     protected DropArea dropArea;
 
     protected virtual void Awake()
@@ -34,10 +36,19 @@ public class ItemSlotManager : MonoBehaviour
         slot.DrawSlot(item);
     }
 
+    public bool IsEmpty()
+    {
+        return slot == null;
+    }
+
     private void OnItemDropped(DraggableComponent draggable)
     {
         draggable.transform.position = transform.position;
         draggable.transform.parent = transform;
+
+        draggable.transform.gameObject.GetComponent<ItemSlot>().item.prefUISlot = index;
     }
+
+    
 
 }

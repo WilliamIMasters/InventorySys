@@ -13,6 +13,8 @@ public abstract class Item : ScriptableObject{
     public int id;
 
     public Sprite icon;
+    [HideInInspector]
+    public int? prefUISlot = null;
 
     public virtual string GetDisplayMessage()
     {

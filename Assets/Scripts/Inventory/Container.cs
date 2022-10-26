@@ -24,6 +24,11 @@ public class Container : MonoBehaviour
         this.maxCapacity = maxCapacity;
     }
 
+    public List<Item> GetItems()
+    {
+        return items;
+    }
+
     private void Start()
     {
         items ??= new List<Item>();
