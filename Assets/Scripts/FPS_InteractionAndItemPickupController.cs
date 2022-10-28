@@ -20,7 +20,7 @@ public class FPS_InteractionAndItemPickupController : MonoBehaviour
 
     void Start()
     {
-        layer_mask = LayerMask.GetMask("Item", "Interactable");
+        layer_mask = LayerMask.GetMask("Item", "Intractable");
         player = gameObject.transform.parent.gameObject.GetComponent<Character>();
     }
 
@@ -49,24 +49,28 @@ public class FPS_InteractionAndItemPickupController : MonoBehaviour
 
         Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * raycastDistance, Color.yellow);
         if (Physics.Raycast(transform.position, fwd, out hit, raycastDistance, layer_mask)) {
-
+            interactionIndicator.Display(hit.transform.gameObject.GetComponent<IIntractable>().GetDisplayMessage());
             var hitGameObject = hit.transform.gameObject;
             if (hitGameObject == null) return;
 
             if (hitGameObject.tag == "Item") {
                 Item item = hitGameObject.GetComponent<PhysicalItem>()?.GetItem();
 
-                interactionIndicator.Display(item.GetDisplayMessage()) ;
+                //interactionIndicator.Display(item.GetDisplayMessage());
 
                 if (Input.GetKey(KeyCode.F)) {
-                    
+
                     hitGameObject.GetComponent<PhysicalItem>()?.RemoveItem();
                     this.inv.AddItem(item);
                 }
-                
 
+
+            } else if (hitGameObject.tag == "Container") {
+                PhysicalContainer container = hitGameObject.GetComponent<PhysicalContainer>();
+
+                //interactionIndicator.Display(container.GetDisplayMessage());
             } else {
-                interactionIndicator.Display();
+                //interactionIndicator.Display();
             }
 
         } else {

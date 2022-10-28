@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhysicalItem : MonoBehaviour
+public class PhysicalItem : MonoBehaviour, IIntractable
 {
 
     [SerializeField]
@@ -28,5 +28,10 @@ public class PhysicalItem : MonoBehaviour
     public void RemoveItem()
     {
         gameObject.active = false;
+    }
+
+    public string GetDisplayMessage()
+    {
+        return item.GetDisplayMessage();
     }
 }
