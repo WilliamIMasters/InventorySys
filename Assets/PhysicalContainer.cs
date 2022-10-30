@@ -6,7 +6,7 @@ public class PhysicalContainer : MonoBehaviour, IIntractable
 {
     public int containerSize;
 
-    private Container container;
+    public Container container;
 
     // Start is called before the first frame update
     void Start()
@@ -24,4 +24,5 @@ public class PhysicalContainer : MonoBehaviour, IIntractable
     {
         return "Open";
     }
+
 }

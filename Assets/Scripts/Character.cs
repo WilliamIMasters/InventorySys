@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    float health;
-    Container inventory;
+    public float health;
+    
+    public Container inventory;
 
-    private void Start()
+    private int inventorySize = 25;
+
+    private void Awake()
     {
-        inventory = GetComponent<Container>();
         if(inventory == null) {
-            Debug.LogError("No container component on " + gameObject.name);
+            inventory = new Container(inventorySize);
         }
     }
 }

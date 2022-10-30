@@ -14,17 +14,20 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
 
     public bool FollowCursor { get; set; } = true;
     public Vector3 startPosition;
+    public Container initalContainer;
     public bool CanDrag { get; set; } = true;
 
     private RectTransform rectTransform;
     [SerializeField]
     private Canvas canvas;
+    private ItemSlot itemSlot;
 
 
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
         canvas = GameObject.Find("PlayerUI").GetComponent<Canvas>();
+        itemSlot = GetComponent<ItemSlot>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -72,6 +75,17 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
             if(dropArea.Accepts(this)) {
                 dropArea.Drop(this);
                 OnEndDragHandler?.Invoke(eventData, true);
+
+                //add to container if different
+                if(initalContainer == null) {
+                    throw new Exception();
+                }
+                Container droppedContainer = transform.parent.parent.GetComponent<ContainerManager>().container;
+                if ( !(initalContainer.id == droppedContainer.id) ) {
+                    droppedContainer.AddItem(itemSlot.item);
+                    initalContainer.RemoveItem(itemSlot.item);
+                }
+
                 return;
             }
         }
@@ -83,6 +97,8 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
     public void OnInitializePotentialDrag(PointerEventData eventData)
     {
         startPosition = rectTransform.anchoredPosition;
+
+        initalContainer = transform.parent.parent.GetComponent<ContainerManager>().container;
     }
 
 }

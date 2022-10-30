@@ -13,19 +13,24 @@ public class ContainerManager : MonoBehaviour
     public List<ItemSlotManager> inventorySlots = new List<ItemSlotManager>();
 
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.O)) {
-            DrawContainer();
-
-        }
-    }
 
     private void Start()
     {
-        container.ContainerChanged.AddListener(DrawContainer);
+        if (container != null) {
+            container?.ContainerChanged.AddListener(DrawContainer);
+            DrawContainer();
+        }
+    }
 
+    public void SetContainer(Container container)
+    {
+        if(container == null) {
+            Debug.LogError("ContainerManager.cs - SetContainer(container) - container was null");
+            return;
+        }
 
+        this.container = container;
+        this.container.ContainerChanged.AddListener(DrawContainer);
         DrawContainer();
     }
 
@@ -40,16 +45,14 @@ public class ContainerManager : MonoBehaviour
     public void DrawContainer()
     {
         ClearContainerUI();
+        if(container == null) {
+            return;
+        }
 
         for(int i=0; i < container.maxCapacity; i++) {
             CreateEmptyInventorySlot(i);
-            /*Item itemAtIndex = container.GetItemAtIndex(i);
-            if (itemAtIndex != null) {
-                inventorySlots[i].AddItemSlot(itemAtIndex);
-                //inventorySlots[i].slot?.DrawSlot(itemAtIndex);
-
-            }*/
         }
+        // Adds items to ui
         var itemsToAddAfter = new List<Item>();
         foreach (Item item in container.GetItems()) {
             if (item.prefUISlot != null && inventorySlots[(int)item.prefUISlot].IsEmpty()) {
@@ -59,7 +62,7 @@ public class ContainerManager : MonoBehaviour
             } else {
                 itemsToAddAfter.Add(item);
             }
-        }
+        }  // any items that didnt have a pref position on  ui added afterwards
         foreach(Item item in itemsToAddAfter) {
             inventorySlots[GetFirstEmptyIndex()].AddItemSlot(item);
         }

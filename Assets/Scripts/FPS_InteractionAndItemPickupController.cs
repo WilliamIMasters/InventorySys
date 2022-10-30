@@ -5,14 +5,19 @@ using UnityEngine;
 
 public class FPS_InteractionAndItemPickupController : MonoBehaviour
 {
+    public Character player;
+    private Container inv;
 
-    public Container inv;
+
 
     public UI_InteractionIndicator interactionIndicator;
     public Canvas invUI;
+    public Canvas foreignContainerUI;
 
-    private Character player;
 
+    public ContainerManager invManager;
+    [SerializeField]
+    private ContainerManager foreignContainerManager;
     [SerializeField]
     private float raycastDistance;
 
@@ -22,6 +27,8 @@ public class FPS_InteractionAndItemPickupController : MonoBehaviour
     {
         layer_mask = LayerMask.GetMask("Item", "Intractable");
         player = gameObject.transform.parent.gameObject.GetComponent<Character>();
+        inv = player.inventory;
+        invManager.SetContainer(inv);
     }
 
     // Update is called once per frame
@@ -29,9 +36,14 @@ public class FPS_InteractionAndItemPickupController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab)) {
             if (invUI != null) {
-                invUI.enabled = !invUI.enabled;
-                Cursor.visible = invUI.enabled;
-                Cursor.lockState = invUI.enabled ? CursorLockMode.None : CursorLockMode.Locked;
+
+                if(!invUI.enabled) {
+                    ShowInventory();
+                    HideForeignContainer();
+                } else {
+                    HideInventory();
+                    HideForeignContainer();
+                }
             }
             
         }
@@ -54,21 +66,21 @@ public class FPS_InteractionAndItemPickupController : MonoBehaviour
             if (hitGameObject == null) return;
 
             if (hitGameObject.tag == "Item") {
-                Item item = hitGameObject.GetComponent<PhysicalItem>()?.GetItem();
-
-                //interactionIndicator.Display(item.GetDisplayMessage());
-
+               
                 if (Input.GetKey(KeyCode.F)) {
-
+                    Item item = hitGameObject.GetComponent<PhysicalItem>()?.GetItem();
                     hitGameObject.GetComponent<PhysicalItem>()?.RemoveItem();
                     this.inv.AddItem(item);
                 }
 
 
             } else if (hitGameObject.tag == "Container") {
-                PhysicalContainer container = hitGameObject.GetComponent<PhysicalContainer>();
+                if (Input.GetKey(KeyCode.F)) {
 
-                //interactionIndicator.Display(container.GetDisplayMessage());
+                    PhysicalContainer container = hitGameObject.GetComponent<PhysicalContainer>();
+                    ShowForeignContainer(container.container);
+                }
+                
             } else {
                 //interactionIndicator.Display();
             }
@@ -77,4 +89,29 @@ public class FPS_InteractionAndItemPickupController : MonoBehaviour
             interactionIndicator.Hide();
         }
     }
+
+
+    private void ShowInventory()
+    {
+        invUI.enabled = true;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+    private void HideInventory()
+    {
+        invUI.enabled = false;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+    private void ShowForeignContainer(Container container)
+    {
+        ShowInventory();
+        foreignContainerManager.SetContainer(container);
+        foreignContainerUI.enabled = true;
+    }
+    private void HideForeignContainer()
+    {
+        foreignContainerUI.enabled = false;
+    }
+
 }

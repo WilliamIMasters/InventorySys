@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Container : MonoBehaviour
+public class Container : ScriptableObject
 {
     public UnityEvent ContainerChanged;
 
@@ -13,15 +13,22 @@ public class Container : MonoBehaviour
     [SerializeField]
     private List<Item> items;
     public int maxCapacity;
+    public string id { get; }
 
     public Container(int maxCapacity)
     {
+        //generates unique id
+        this.id = Guid.NewGuid().ToString();
+
         this.maxCapacity = maxCapacity;
+        items = new List<Item>();
+        ContainerChanged = new UnityEvent();
     }
     public Container(List<Item> items, int maxCapacity)
     {
         this.items = items;
         this.maxCapacity = maxCapacity;
+        ContainerChanged = new UnityEvent();
     }
 
     public List<Item> GetItems()
@@ -75,8 +82,7 @@ public class Container : MonoBehaviour
             AddNewItem(item);
         }
 
-        // Update UI;
-        ContainerChanged.Invoke();
+        ContainerChanged?.Invoke();
     }
 
     public void ClearItems()
@@ -99,6 +105,9 @@ public class Container : MonoBehaviour
         }
     }
 
+    internal void RemoveItem(Item item)
+    {
 
-
+        items.Remove(item);
+    }
 }
