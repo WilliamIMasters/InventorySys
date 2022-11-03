@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Apple
   description: An Apple
   id: 0
-  icon: {fileID: 21300000, guid: e1f0cc459a0c6c84fb5efccc67ba64bc, type: 3}
+  iconPath: Items/apple.png
   qty: 1
   maxStack: 16
   effects: []

@@ -8,13 +8,8 @@ public class Consumable : StackableItem
 
     public ConsumableEffect[] effects;
 
-    public Consumable(string name, string description, int id, int qty, int maxStack, ConsumableEffect[] effects)
+    public Consumable(string name, string description, int id, Sprite sprite, int qty, int maxStack, ConsumableEffect[] effects) :base(name, description, id, sprite, qty, maxStack)
     {
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        this.qty = qty;
-        this.maxStack = maxStack;
         this.effects = effects;
     }
 }

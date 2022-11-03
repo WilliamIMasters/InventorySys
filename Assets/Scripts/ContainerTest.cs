@@ -12,7 +12,7 @@ public class ContainerTest : MonoBehaviour
     {
         this.container = GetComponent<Container>();
 
-        testItem = new Consumable("Apple","An apple", 0, 3, 16, new ConsumableEffect[0]);
+        //testItem = new Consumable("Apple","An apple", 0, 3, 16, new ConsumableEffect[0]);
 
     }
 

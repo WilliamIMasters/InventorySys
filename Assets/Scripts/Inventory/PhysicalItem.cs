@@ -6,7 +6,7 @@ public class PhysicalItem : MonoBehaviour, IIntractable
 {
 
     [SerializeField]
-    private Item itemScriptable;
+    private int itemId =-1;
     [SerializeField]
     private int qty;
 
@@ -14,14 +14,19 @@ public class PhysicalItem : MonoBehaviour, IIntractable
 
     private void Awake()
     {
-        item = Instantiate(itemScriptable);
-        if(item is StackableItem) {
-            ((StackableItem)item).qty = this.qty;
-        }
+
+        GetItemFromDb();
+
+        
     }
 
     public Item GetItem()
     {
+
+        if(item == null) {
+            GetItemFromDb();
+        }
+
         return item;
     }
 
@@ -33,5 +38,13 @@ public class PhysicalItem : MonoBehaviour, IIntractable
     public string GetDisplayMessage()
     {
         return item.GetDisplayMessage();
+    }
+
+    private void GetItemFromDb()
+    {
+        item = ItemDataBase.GetItemById(itemId);
+        if (item is StackableItem) {
+            ((StackableItem)item).qty = this.qty;
+        }
     }
 }

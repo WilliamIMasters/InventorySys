@@ -52,19 +52,24 @@ public class ContainerManager : MonoBehaviour
         for(int i=0; i < container.maxCapacity; i++) {
             CreateEmptyInventorySlot(i);
         }
+        
         // Adds items to ui
         var itemsToAddAfter = new List<Item>();
         foreach (Item item in container.GetItems()) {
-            if (item.prefUISlot != null && inventorySlots[(int)item.prefUISlot].IsEmpty()) {
+            if (item.prefUISlot != -1 && inventorySlots[item.prefUISlot].IsEmpty()) {
 
                 inventorySlots[(int)item.prefUISlot].AddItemSlot(item);
 
             } else {
                 itemsToAddAfter.Add(item);
             }
-        }  // any items that didnt have a pref position on  ui added afterwards
+        }  
+        
+        // any items that didnt have a pref position on  ui added afterwards
         foreach(Item item in itemsToAddAfter) {
-            inventorySlots[GetFirstEmptyIndex()].AddItemSlot(item);
+            var emptyIndex = GetFirstEmptyIndex();
+            inventorySlots[emptyIndex].AddItemSlot(item);
+            item.prefUISlot = emptyIndex;
         }
     }
 

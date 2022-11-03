@@ -8,7 +8,7 @@ public static class ItemDataBase
 
     public static Item GetItemById(int id)
     {
-        return allItems.Find(i => i.id == id);
+        return allItems.Find(i => i.id == id).Clone() as Item;
     }
 
     public static StackableItem GetItemById(int id, int qty)
@@ -24,6 +24,12 @@ public static class ItemDataBase
     }
 
     private static readonly List<Item> allItems = new List<Item> {
-        new Consumable("Apple", "An apple", 0, 1, 16, new ConsumableEffect[0])
+        new Consumable("Apple", "An apple", 0, GetSpriteFromPath("Items/Apple"), 1, 16, new ConsumableEffect[0])
     };
+
+    private static Sprite GetSpriteFromPath(string path)
+    {
+        var sprite = Resources.Load<Sprite>(path);
+        return sprite;
+    }
 }
