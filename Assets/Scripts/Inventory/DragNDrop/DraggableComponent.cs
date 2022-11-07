@@ -15,6 +15,7 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
     public bool FollowCursor { get; set; } = true;
     public Vector3 startPosition;
     public Container initalContainer;
+    public ItemSlotManager initalItemSlotManager;
     public bool CanDrag { get; set; } = true;
 
     private RectTransform rectTransform;
@@ -73,20 +74,69 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
 
         if(dropArea != null) {
             if(dropArea.Accepts(this)) {
-                dropArea.Drop(this);
-                OnEndDragHandler?.Invoke(eventData, true);
+                
 
-                //add to container if different
-                if(initalContainer == null) {
-                    throw new Exception();
-                }
                 Container droppedContainer = transform.parent.parent.GetComponent<ContainerManager>().container;
-                if ( !(initalContainer.id == droppedContainer.id) ) {
-                    droppedContainer.AddItem(itemSlot.item);
-                    initalContainer.RemoveItem(itemSlot.item);
-                }
+                var newItemSlotManager = dropArea.GetComponent<ItemSlotManager>();
+                
+                
+                
+                // if spot empty add item
+                if (newItemSlotManager.IsEmpty()) {
+                    // drops item
+                    dropArea.Drop(this);
+                    OnEndDragHandler?.Invoke(eventData, true);
 
-                return;
+                    // adds slot to new slot manager
+                    newItemSlotManager.slot = initalItemSlotManager.slot;
+                    initalItemSlotManager.slot = null;
+
+                    // switches container if different
+                    if (initalContainer == null) {
+                        throw new Exception();
+                    }
+                    if (!(initalContainer.id == droppedContainer.id)) {
+                        droppedContainer.AddItem(itemSlot.item);
+                        initalContainer.RemoveItem(itemSlot.item);
+                    }
+
+                    return;
+                } else { // else swap items
+
+
+                    // moves other slot to slot manager
+                    var oldItem = newItemSlotManager.transform.GetChild(0);//.SetParent(initalItemSlotManager.transform);
+                    oldItem.SetParent(initalItemSlotManager.transform, false);
+
+
+                    // drops item
+                    dropArea.Drop(this);
+                    OnEndDragHandler?.Invoke(eventData, true);
+
+                    // swaps slot managers
+                    newItemSlotManager.slot = initalItemSlotManager.slot;
+                    var tmp = newItemSlotManager.slot;
+                    initalItemSlotManager.slot = tmp;
+
+                    // swaps containers if different
+                    if (initalContainer == null) {
+                        throw new Exception();
+                    }
+                    if (!(initalContainer.id == droppedContainer.id)) {
+                        droppedContainer.AddItem(itemSlot.item);
+                        initalContainer.RemoveItem(itemSlot.item);
+
+                        var otherItem = initalItemSlotManager.slot.item;
+
+                        droppedContainer.RemoveItem(otherItem);
+                        initalContainer.AddItem(otherItem);
+                    }
+
+                    return;
+
+                }
+                
+
             }
         }
 
@@ -99,6 +149,8 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
         startPosition = rectTransform.anchoredPosition;
 
         initalContainer = transform.parent.parent.GetComponent<ContainerManager>().container;
+
+        initalItemSlotManager = transform.parent.GetComponent<ItemSlotManager>();
     }
 
 }

@@ -24,7 +24,8 @@ public static class ItemDataBase
     }
 
     private static readonly List<Item> allItems = new List<Item> {
-        new Consumable("Apple", "An apple", 0, GetSpriteFromPath("Items/Apple"), 1, 16, new ConsumableEffect[0])
+        new Consumable("Apple", "An apple", 0, GetSpriteFromPath("Items/Apple"), 1, 16, new ConsumableEffect[0]),
+        new Consumable("Banana", "A banana", 1, GetSpriteFromPath("Items/Banana"), 1, 16, new ConsumableEffect[0])
     };
 
     private static Sprite GetSpriteFromPath(string path)
