@@ -26,7 +26,7 @@ public class FPS_InteractionAndItemPickupController : MonoBehaviour
     void Start()
     {
         layer_mask = LayerMask.GetMask("Item", "Intractable");
-        player = gameObject.transform.parent.gameObject.GetComponent<Character>();
+        player = this.player ?? gameObject.transform.parent.gameObject.GetComponent<Character>();
         inv = player.inventory;
         invManager.SetContainer(inv);
     }

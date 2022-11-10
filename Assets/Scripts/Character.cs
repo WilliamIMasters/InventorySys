@@ -16,4 +16,18 @@ public class Character : MonoBehaviour
             inventory = new Container(inventorySize);
         }
     }
+
+    public void TakeDamage(int dmg)
+    {
+        health -= dmg;
+        if(health < 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        gameObject.SetActive(false);
+    }
 }
