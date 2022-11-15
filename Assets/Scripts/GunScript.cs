@@ -22,7 +22,7 @@ public class GunScript : MonoBehaviour
     public LayerMask shootable;
 
     // Camera Shake
-    public GunShotRecoilOffSetter camShake;
+    public GunShotRecoilController camShake;
     public float shakeMagnitude;
     public GameObject bulletHit;
     public MuzzleFlashController flashController;
@@ -101,14 +101,12 @@ public class GunScript : MonoBehaviour
     private void ShotSideEffects()
     {
         // Camera shake
-        camShake.Shot(shakeMagnitude);
+        camShake.Shot(shakeMagnitude, shakeMagnitude/2);
         
         // Instantiaets bulletHole
         Instantiate(bulletHit, hit.point + hit.normal * 0.001f, Quaternion.LookRotation(hit.normal, Vector3.up) * bulletHit.transform.rotation);
 
-
         flashController.Fire();
-
     }
 
 

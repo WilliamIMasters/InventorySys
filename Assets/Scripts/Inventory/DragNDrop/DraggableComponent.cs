@@ -23,12 +23,26 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
     private Canvas canvas;
     private ItemSlot itemSlot;
 
+    private bool isDragging;
 
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
         canvas = GameObject.Find("PlayerUI").GetComponent<Canvas>();
         itemSlot = GetComponent<ItemSlot>();
+
+        OnEndDragHandler += (data, success) => OnEndDragHandlerEnvoked(data, success);
+
+        isDragging = false;
+    }
+
+    public void OnClick()
+    {
+        Debug.Log("Clicked");
+        if(!isDragging) {
+            Debug.Log("Clicked, Was clickable");
+            Debug.Log("DC is stackable: " + itemSlot.item.IsStackable().ToString());
+        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -38,6 +52,7 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
         }
         
         OnBeginDragHandler?.Invoke(eventData);
+        isDragging = true;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -85,6 +100,7 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
                 if (newItemSlotManager.IsEmpty()) {
                     // drops item
                     dropArea.Drop(this);
+                    isDragging = false;
                     OnEndDragHandler?.Invoke(eventData, true);
 
                     // adds slot to new slot manager
@@ -101,9 +117,9 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
                     }
 
                     return;
-                } else { // else swap items
+                } else { // else swap/stack items
 
-
+                    //if(GetComponent<ItemSlot>().item is StackableItem  && GetComponent<ItemSlot>().item.id == newItemSlotManager.slot.item.id && (newItemSlotManager.slot.item))
                     // moves other slot to slot manager
                     var oldItem = newItemSlotManager.transform.GetChild(0);//.SetParent(initalItemSlotManager.transform);
                     oldItem.SetParent(initalItemSlotManager.transform, false);
@@ -151,6 +167,13 @@ public class DraggableComponent : MonoBehaviour, IInitializePotentialDragHandler
         initalContainer = transform.parent.parent.GetComponent<ContainerManager>().container;
 
         initalItemSlotManager = transform.parent.GetComponent<ItemSlotManager>();
+    }
+
+    private void OnEndDragHandlerEnvoked(PointerEventData data, bool success)
+    {
+        if(success) {
+            isDragging = false;
+        }
     }
 
 }

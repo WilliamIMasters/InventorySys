@@ -35,4 +35,8 @@ public abstract class Item : ScriptableObject, ICloneable
         return name;
     }
 
+    public bool IsStackable()
+    {
+        return this is StackableItem;
+    }
 }
