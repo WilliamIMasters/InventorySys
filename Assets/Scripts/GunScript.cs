@@ -55,7 +55,7 @@ public class GunScript : MonoBehaviour
 
 
         // shoot
-        if(readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        if(readyToShoot && shooting && !reloading && bulletsLeft > 0  && !Cursor.visible)
         {
             bulletsShot = bulletsPerTap;
             Shoot();
